@@ -106,4 +106,8 @@ public class MongoService implements Service {
 			}
 		});
 	}
+	
+	public<T> void delete(FindBy<T> findBy, Handler<AsyncResult<Void>> handler) {
+		mongo.removeOne(findBy.getType().getName(), new MongoCriteriaBuilder<>(findBy).toJson(), handler);
+	}
 }
