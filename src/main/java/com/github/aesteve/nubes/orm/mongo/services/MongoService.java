@@ -24,16 +24,20 @@ public class MongoService implements Service {
 	private MongoClient mongo;
 	private JsonSerializer serializer;
 	private ObjectMapper mapper;
+	private Vertx vertx;
+	private JsonObject config;
 	
 	@Override
 	public void init(Vertx vertx, JsonObject config) {
-		mongo = MongoClient.createShared(vertx, config);
-		this.serializer = new JsonSerializerFactory().create();
-		this.mapper = JsonFactory.create();
+		this.vertx = vertx;
+		this.config = config;
 	}
 
 	@Override
 	public void start(Future<Void> future) {
+		mongo = MongoClient.createShared(vertx, config);
+		this.serializer = new JsonSerializerFactory().create();
+		this.mapper = JsonFactory.create();
 		future.complete();
 	}
 
