@@ -21,8 +21,8 @@ public class GetByIdProcessor extends NoopAfterAllProcessor implements Annotatio
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void postHandle(RoutingContext context) {
-		FindBy findBy = context.get(Payload.DATA_ATTR);
-		mongo.findBy(findBy, res -> {
+		Payload<FindBy> payload = context.get(Payload.DATA_ATTR);
+		mongo.findBy(payload.get(), res -> {
 			if (res.failed()) {
 				context.fail(res.cause());
 			} else {
