@@ -81,7 +81,7 @@ public class MongoService implements Service {
 				try {
 					Integer lastItemInRange = Math.min(lastItem, complete.size());
 					complete.subList(firstItem, lastItemInRange).forEach(item -> {
-						result.list.add(mapper.fromJson(result.toString(), findBy.getType()));
+						result.list.add(mapper.fromJson(item.toString(), findBy.getType()));
 					});
 					handler.handle(Future.succeededFuture(result));
 				} catch(Exception e) {
