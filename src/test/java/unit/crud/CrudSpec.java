@@ -1,6 +1,7 @@
 package unit.crud;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Test;
 
@@ -85,6 +86,25 @@ public class CrudSpec extends TestBase {
 				context.assertFalse(findRes.failed());
 				ListAndCount<Dog> findResult = findRes.result();
 				context.assertEquals(1l, findResult.count);
+				async.complete();
+			});
+		});
+	}
+	
+	@Test
+	public void createMany(TestContext context) {
+		Async async = context.async();
+		Dog snowy = new Dog("Snowy", "Fox");
+		Dog pluto = new Dog("Pluto", "Mutt");
+		mongo.createMany(Arrays.asList(snowy, pluto), res -> {
+			context.assertFalse(res.failed());
+			List<Dog> result = res.result();
+			context.assertNotNull(result);
+			context.assertEquals(result.size(), 2);
+			mongo.listAndCount(new FindBy<>(Dog.class), 0, 100, findRes -> {
+				context.assertFalse(findRes.failed());
+				ListAndCount<Dog> list = findRes.result();
+				context.assertEquals(3l, list.count);
 				async.complete();
 			});
 		});

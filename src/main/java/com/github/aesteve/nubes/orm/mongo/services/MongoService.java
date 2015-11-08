@@ -12,6 +12,7 @@ import com.github.aesteve.nubes.orm.mongo.queries.MongoCriteriaBuilder;
 import com.github.aesteve.nubes.orm.queries.FindBy;
 import com.github.aesteve.nubes.orm.queries.ListAndCount;
 import com.github.aesteve.vertx.nubes.services.Service;
+import com.github.aesteve.vertx.nubes.utils.async.MultipleFutures;
 
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
@@ -106,6 +107,35 @@ public class MongoService implements Service {
 				}
 			}
 		});
+	}
+	
+	public<T> void createMany(List<T> objects, Handler<AsyncResult<List<T>>> handler) {
+		if (objects == null || objects.isEmpty()) {
+			handler.handle(Future.succeededFuture(new ArrayList<T>()));
+			return;
+		}
+		MultipleFutures<T> futures = new MultipleFutures<>();
+		List<T> createdObjects = new ArrayList<>();
+		futures.setHandler(res -> {
+			if (res.failed()) {
+				handler.handle(Future.failedFuture(res.cause()));
+			} else {
+				handler.handle(Future.succeededFuture(createdObjects));
+			}
+		});
+		objects.forEach(object -> {
+			futures.add(future -> {
+				create(object, res -> {
+					if (res.failed()) {
+						future.fail(res.cause());
+					} else {
+						createdObjects.add(res.result());
+						future.complete(res.result());
+					}
+				});
+			});
+		});
+		futures.start();
 	}
 	
 	public<T> void update(T object, FindBy<T> findBy, Handler<AsyncResult<T>> handler) {
