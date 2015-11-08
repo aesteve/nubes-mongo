@@ -127,6 +127,7 @@ public class MongoService implements Service {
 			futures.add(future -> {
 				create(object, res -> {
 					if (res.failed()) {
+						res.cause().printStackTrace();
 						future.fail(res.cause());
 					} else {
 						createdObjects.add(res.result());
