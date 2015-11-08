@@ -1,5 +1,6 @@
 package com.github.aesteve.nubes.orm.mongo.services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.boon.json.JsonFactory;
@@ -52,6 +53,10 @@ public class MongoService implements Service {
 				handler.handle(Future.failedFuture(res.cause()));
 			} else {
 				JsonObject result = res.result();
+				if (result == null) {
+					handler.handle(Future.succeededFuture(null));
+					return;
+				}
 				try {
 					T mapped = mapper.fromJson(result.toString(), findBy.getType());
 					handler.handle(Future.succeededFuture(mapped));
@@ -68,10 +73,14 @@ public class MongoService implements Service {
 				handler.handle(Future.failedFuture(res.cause()));
 			} else {
 				List<JsonObject> complete = res.result();
+				if (complete == null) {
+					complete = new ArrayList<>(0);
+				}
 				ListAndCount<T> result = new ListAndCount<>();
 				result.count = Long.valueOf(complete.size());
 				try {
-					complete.subList(firstItem, lastItem).forEach(item -> {
+					Integer lastItemInRange = Math.min(lastItem, complete.size());
+					complete.subList(firstItem, lastItemInRange).forEach(item -> {
 						result.list.add(mapper.fromJson(result.toString(), findBy.getType()));
 					});
 					handler.handle(Future.succeededFuture(result));
