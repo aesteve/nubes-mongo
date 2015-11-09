@@ -1,5 +1,12 @@
 package com.github.aesteve.nubes.orm.mongo.services;
 
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Future;
+import io.vertx.core.Handler;
+import io.vertx.core.Vertx;
+import io.vertx.core.json.JsonObject;
+import io.vertx.ext.mongo.MongoClient;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,13 +21,6 @@ import com.github.aesteve.nubes.orm.queries.ListAndCount;
 import com.github.aesteve.vertx.nubes.services.Service;
 import com.github.aesteve.vertx.nubes.utils.async.MultipleFutures;
 
-import io.vertx.core.AsyncResult;
-import io.vertx.core.Future;
-import io.vertx.core.Handler;
-import io.vertx.core.Vertx;
-import io.vertx.core.json.JsonObject;
-import io.vertx.ext.mongo.MongoClient;
-
 public class MongoService implements Service {
 
 	private MongoClient mongo;
@@ -28,7 +28,7 @@ public class MongoService implements Service {
 	private ObjectMapper mapper;
 	private Vertx vertx;
 	private JsonObject config;
-	
+
 	@Override
 	public void init(Vertx vertx, JsonObject config) {
 		this.vertx = vertx;
@@ -47,8 +47,8 @@ public class MongoService implements Service {
 	public void stop(Future<Void> future) {
 		future.complete();
 	}
-	
-	public<T> void findBy(FindBy<T> findBy, Handler<AsyncResult<T>> handler) {
+
+	public <T> void findBy(FindBy<T> findBy, Handler<AsyncResult<T>> handler) {
 		mongo.findOne(findBy.getType().getName(), new MongoCriteriaBuilder<>(findBy).toJson(), null, res -> {
 			if (res.failed()) {
 				handler.handle(Future.failedFuture(res.cause()));
@@ -61,14 +61,14 @@ public class MongoService implements Service {
 				try {
 					T mapped = mapper.fromJson(result.toString(), findBy.getType());
 					handler.handle(Future.succeededFuture(mapped));
-				} catch(Exception e) {
+				} catch (Exception e) {
 					handler.handle(Future.failedFuture(e));
 				}
 			}
 		});
 	}
-	
-	public<T> void listAndCount(FindBy<T> findBy, Integer firstItem, Integer lastItem, Handler<AsyncResult<ListAndCount<T>>> handler) {
+
+	public <T> void listAndCount(FindBy<T> findBy, Integer firstItem, Integer lastItem, Handler<AsyncResult<ListAndCount<T>>> handler) {
 		mongo.find(findBy.getType().getName(), new MongoCriteriaBuilder<>(findBy).toJson(), res -> {
 			if (res.failed()) {
 				handler.handle(Future.failedFuture(res.cause()));
@@ -85,31 +85,31 @@ public class MongoService implements Service {
 						result.list.add(mapper.fromJson(item.toString(), findBy.getType()));
 					});
 					handler.handle(Future.succeededFuture(result));
-				} catch(Exception e) {
+				} catch (Exception e) {
 					handler.handle(Future.failedFuture(e));
 				}
 			}
 		});
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public<T> void create(T object, Handler<AsyncResult<T>> handler) {
+	public <T> void create(T object, Handler<AsyncResult<T>> handler) {
 		JsonObject json = new JsonObject(serializer.serialize(object).toString());
 		mongo.insert(object.getClass().getName(), json, res -> {
 			if (res.failed()) {
 				handler.handle(Future.failedFuture(res.cause()));
 			} else {
 				try {
-					T mapped = (T)mapper.fromJson(json.toString(), object.getClass());
+					T mapped = (T) mapper.fromJson(json.toString(), object.getClass());
 					handler.handle(Future.succeededFuture(mapped));
-				} catch(Exception e) {
+				} catch (Exception e) {
 					handler.handle(Future.failedFuture(e));
 				}
 			}
 		});
 	}
-	
-	public<T> void createMany(List<T> objects, Handler<AsyncResult<List<T>>> handler) {
+
+	public <T> void createMany(List<T> objects, Handler<AsyncResult<List<T>>> handler) {
 		if (objects == null || objects.isEmpty()) {
 			handler.handle(Future.succeededFuture(new ArrayList<T>()));
 			return;
@@ -138,8 +138,8 @@ public class MongoService implements Service {
 		});
 		futures.start();
 	}
-	
-	public<T> void update(T object, FindBy<T> findBy, Handler<AsyncResult<T>> handler) {
+
+	public <T> void update(T object, FindBy<T> findBy, Handler<AsyncResult<T>> handler) {
 		JsonObject json = new JsonObject(serializer.serialize(object).toString());
 		JsonObject query = new JsonObject().put("$set", json);
 		mongo.update(object.getClass().getName(), new MongoCriteriaBuilder<>(findBy).toJson(), query, res -> {
@@ -150,13 +150,13 @@ public class MongoService implements Service {
 			}
 		});
 	}
-	
-	public<T> void delete(FindBy<T> findBy, Handler<AsyncResult<Void>> handler) {
+
+	public <T> void delete(FindBy<T> findBy, Handler<AsyncResult<Void>> handler) {
 		mongo.removeOne(findBy.getType().getName(), new MongoCriteriaBuilder<>(findBy).toJson(), handler);
 	}
-	
-	public<T> void deleteAll(FindBy<T> findBy, Handler<AsyncResult<Void>> handler) {
+
+	public <T> void deleteAll(FindBy<T> findBy, Handler<AsyncResult<Void>> handler) {
 		mongo.remove(findBy.getType().getName(), new MongoCriteriaBuilder<>(findBy).toJson(), handler);
 	}
-	
+
 }

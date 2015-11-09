@@ -9,14 +9,14 @@ import com.github.aesteve.vertx.nubes.reflections.factories.AnnotationProcessorF
 public class RemoveByIdProcessorFactory implements AnnotationProcessorFactory<RemoveById> {
 
 	private MongoService mongo;
-	
+
 	public RemoveByIdProcessorFactory(MongoService hibernate) {
 		this.mongo = hibernate;
 	}
-	
+
 	@Override
 	public AnnotationProcessor<RemoveById> create(RemoveById annnot) {
 		return new RemoveByIdProcessor(mongo);
 	}
-	
+
 }

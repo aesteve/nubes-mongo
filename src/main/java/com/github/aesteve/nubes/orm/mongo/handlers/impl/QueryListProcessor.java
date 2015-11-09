@@ -1,5 +1,7 @@
 package com.github.aesteve.nubes.orm.mongo.handlers.impl;
 
+import io.vertx.ext.web.RoutingContext;
+
 import com.github.aesteve.nubes.orm.annotations.RetrieveByQuery;
 import com.github.aesteve.nubes.orm.mongo.services.MongoService;
 import com.github.aesteve.nubes.orm.queries.FindBy;
@@ -8,12 +10,10 @@ import com.github.aesteve.vertx.nubes.handlers.AnnotationProcessor;
 import com.github.aesteve.vertx.nubes.handlers.impl.NoopAfterAllProcessor;
 import com.github.aesteve.vertx.nubes.marshallers.Payload;
 
-import io.vertx.ext.web.RoutingContext;
-
 public class QueryListProcessor extends NoopAfterAllProcessor implements AnnotationProcessor<RetrieveByQuery> {
-	
+
 	private MongoService mongo;
-	
+
 	public QueryListProcessor(MongoService mongo) {
 		this.mongo = mongo;
 	}
@@ -36,7 +36,7 @@ public class QueryListProcessor extends NoopAfterAllProcessor implements Annotat
 			}
 		});
 	}
-	
+
 	@Override
 	public void preHandle(RoutingContext context) {
 		context.next();

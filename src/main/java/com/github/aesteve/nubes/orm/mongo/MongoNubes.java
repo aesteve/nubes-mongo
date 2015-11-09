@@ -1,5 +1,11 @@
 package com.github.aesteve.nubes.orm.mongo;
 
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Handler;
+import io.vertx.core.Vertx;
+import io.vertx.core.json.JsonObject;
+import io.vertx.ext.web.Router;
+
 import com.github.aesteve.nubes.orm.annotations.Create;
 import com.github.aesteve.nubes.orm.annotations.RemoveById;
 import com.github.aesteve.nubes.orm.annotations.RetrieveById;
@@ -12,12 +18,6 @@ import com.github.aesteve.nubes.orm.mongo.factories.SavesAndReturnProcessorFacto
 import com.github.aesteve.nubes.orm.mongo.factories.UpdateAndReturnProcessorFactory;
 import com.github.aesteve.nubes.orm.mongo.services.MongoService;
 import com.github.aesteve.vertx.nubes.VertxNubes;
-
-import io.vertx.core.AsyncResult;
-import io.vertx.core.Handler;
-import io.vertx.core.Vertx;
-import io.vertx.core.json.JsonObject;
-import io.vertx.ext.web.Router;
 
 public class MongoNubes extends VertxNubes {
 
@@ -33,7 +33,7 @@ public class MongoNubes extends VertxNubes {
 		mongo = new MongoService();
 		registerService(MONGO_SERVICE_NAME, mongo);
 	}
-	
+
 	@Override
 	public void bootstrap(Handler<AsyncResult<Router>> handler) {
 		mongo.init(vertx, jsonConfig);

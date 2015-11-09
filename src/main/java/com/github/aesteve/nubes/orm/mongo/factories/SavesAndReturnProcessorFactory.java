@@ -9,14 +9,14 @@ import com.github.aesteve.vertx.nubes.reflections.factories.AnnotationProcessorF
 public class SavesAndReturnProcessorFactory implements AnnotationProcessorFactory<Create> {
 
 	private MongoService mongo;
-	
+
 	public SavesAndReturnProcessorFactory(MongoService hibernate) {
 		this.mongo = hibernate;
 	}
-	
+
 	@Override
 	public AnnotationProcessor<Create> create(Create arg0) {
 		return new SavesAndReturnProcessor(mongo);
 	}
-	
+
 }

@@ -1,5 +1,13 @@
 package unit;
 
+import io.vertx.core.Future;
+import io.vertx.core.Vertx;
+import io.vertx.core.json.JsonObject;
+import io.vertx.ext.unit.Async;
+import io.vertx.ext.unit.TestContext;
+import io.vertx.ext.unit.junit.VertxUnitRunner;
+import mock.models.Dog;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -12,23 +20,16 @@ import de.flapdoodle.embed.mongo.config.MongodConfigBuilder;
 import de.flapdoodle.embed.mongo.config.Net;
 import de.flapdoodle.embed.mongo.distribution.Version;
 import de.flapdoodle.embed.process.runtime.Network;
-import io.vertx.core.Future;
-import io.vertx.core.Vertx;
-import io.vertx.core.json.JsonObject;
-import io.vertx.ext.unit.Async;
-import io.vertx.ext.unit.TestContext;
-import io.vertx.ext.unit.junit.VertxUnitRunner;
-import mock.models.Dog;
 
 @RunWith(VertxUnitRunner.class)
 public abstract class TestBase {
-	
+
 	public final static int MONGO_PORT = 8889;
-	
+
 	protected MongodExecutable mongod;
 	protected Vertx vertx;
 	protected MongoService mongo;
-	
+
 	@Before
 	public void setUp(TestContext context) {
 		Async async = context.async();
@@ -42,7 +43,7 @@ public abstract class TestBase {
 				mongod = starter.prepare(builder.build());
 				mongod.start();
 				future.complete();
-			} catch(Exception e) {
+			} catch (Exception e) {
 				future.fail(e);
 			}
 		}, res -> {
@@ -69,12 +70,12 @@ public abstract class TestBase {
 			}
 		});
 	}
-	
+
 	@After
 	public void tearDown(TestContext context) {
 		mongod.stop();
 	}
-	
+
 	protected JsonObject config() {
 		JsonObject json = new JsonObject();
 		json.put("host", "localhost");

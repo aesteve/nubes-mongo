@@ -9,14 +9,14 @@ import com.github.aesteve.vertx.nubes.reflections.factories.AnnotationProcessorF
 public class GetByIdProcessorFactory implements AnnotationProcessorFactory<RetrieveById> {
 
 	private MongoService mongo;
-	
+
 	public GetByIdProcessorFactory(MongoService hibernate) {
 		this.mongo = hibernate;
 	}
-	
+
 	@Override
 	public AnnotationProcessor<RetrieveById> create(RetrieveById annnot) {
 		return new GetByIdProcessor(mongo);
 	}
-	
+
 }

@@ -9,14 +9,14 @@ import com.github.aesteve.vertx.nubes.reflections.factories.AnnotationProcessorF
 public class QueryListProcessorFactory implements AnnotationProcessorFactory<RetrieveByQuery> {
 
 	private MongoService mongo;
-	
+
 	public QueryListProcessorFactory(MongoService hibernate) {
 		this.mongo = hibernate;
 	}
-	
+
 	@Override
 	public AnnotationProcessor<RetrieveByQuery> create(RetrieveByQuery annnot) {
 		return new QueryListProcessor(mongo);
 	}
-	
+
 }

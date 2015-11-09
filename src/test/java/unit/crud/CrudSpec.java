@@ -1,17 +1,19 @@
 package unit.crud;
 
+import io.vertx.ext.unit.Async;
+import io.vertx.ext.unit.TestContext;
+
 import java.util.Arrays;
 import java.util.List;
 
+import mock.models.Dog;
+
 import org.junit.Test;
+
+import unit.TestBase;
 
 import com.github.aesteve.nubes.orm.queries.FindBy;
 import com.github.aesteve.nubes.orm.queries.ListAndCount;
-
-import io.vertx.ext.unit.Async;
-import io.vertx.ext.unit.TestContext;
-import mock.models.Dog;
-import unit.TestBase;
 
 public class CrudSpec extends TestBase {
 
@@ -33,7 +35,7 @@ public class CrudSpec extends TestBase {
 			});
 		});
 	}
-	
+
 	@Test
 	public void update(TestContext context) {
 		Async async = context.async();
@@ -52,7 +54,7 @@ public class CrudSpec extends TestBase {
 			});
 		});
 	}
-	
+
 	@Test
 	public void insertAndFindMany(TestContext context) {
 		Async async = context.async();
@@ -71,7 +73,7 @@ public class CrudSpec extends TestBase {
 			});
 		});
 	}
-	
+
 	@Test
 	public void insertAndFindOne(TestContext context) {
 		Async async = context.async();
@@ -90,7 +92,7 @@ public class CrudSpec extends TestBase {
 			});
 		});
 	}
-	
+
 	@Test
 	public void createMany(TestContext context) {
 		Async async = context.async();

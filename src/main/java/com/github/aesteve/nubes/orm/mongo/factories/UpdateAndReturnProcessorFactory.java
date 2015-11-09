@@ -9,14 +9,14 @@ import com.github.aesteve.vertx.nubes.reflections.factories.AnnotationProcessorF
 public class UpdateAndReturnProcessorFactory implements AnnotationProcessorFactory<Update> {
 
 	private MongoService mongo;
-	
+
 	public UpdateAndReturnProcessorFactory(MongoService hibernate) {
 		this.mongo = hibernate;
 	}
-	
+
 	@Override
 	public AnnotationProcessor<Update> create(Update update) {
 		return new UpdateAndReturnProcessor(mongo);
 	}
-	
+
 }
