@@ -37,7 +37,7 @@ public class MongoService implements Service {
 
 	@Override
 	public void start(Future<Void> future) {
-		mongo = MongoClient.createShared(vertx, config);
+		mongo = MongoClient.createShared(vertx, config.getJsonObject("mongo"));
 		this.serializer = new JsonSerializerFactory().create();
 		this.mapper = JsonFactory.create();
 		future.complete();

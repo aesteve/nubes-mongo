@@ -80,6 +80,6 @@ public abstract class TestBase {
 		JsonObject json = new JsonObject();
 		json.put("host", "localhost");
 		json.put("port", MONGO_PORT);
-		return json;
+		return new JsonObject().put("mongo", json);
 	}
 }

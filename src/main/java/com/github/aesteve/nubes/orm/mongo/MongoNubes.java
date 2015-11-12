@@ -25,18 +25,14 @@ public class MongoNubes extends VertxNubes {
 
 	protected MongoService mongo;
 
-	private JsonObject jsonConfig;
-
 	public MongoNubes(Vertx vertx, JsonObject config) {
 		super(vertx, config);
-		this.jsonConfig = config.getJsonObject("mongo");
 		mongo = new MongoService();
 		registerService(MONGO_SERVICE_NAME, mongo);
 	}
 
 	@Override
 	public void bootstrap(Handler<AsyncResult<Router>> handler) {
-		mongo.init(vertx, jsonConfig);
 		registerAnnotationProcessor(Create.class, new SavesAndReturnProcessorFactory(mongo));
 		registerAnnotationProcessor(Update.class, new UpdateAndReturnProcessorFactory(mongo));
 		registerAnnotationProcessor(RetrieveById.class, new GetByIdProcessorFactory(mongo));
