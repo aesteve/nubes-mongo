@@ -21,12 +21,13 @@ public class GetByIdProcessor extends NoopAfterAllProcessor implements Annotatio
 	@Override
 	public void postHandle(RoutingContext context) {
 		Payload<FindBy> payload = context.get(Payload.DATA_ATTR);
-		mongo.findBy(payload.get(), res -> {
+		FindBy findBy = payload.get();
+		mongo.findBy(findBy, res -> {
 			if (res.failed()) {
 				context.fail(res.cause());
 			} else {
 				Payload newPayload = new Payload<>();
-				newPayload.set(res.result());
+				newPayload.set(findBy.transform(res.result()));
 				context.put(Payload.DATA_ATTR, newPayload);
 				context.next();
 			}

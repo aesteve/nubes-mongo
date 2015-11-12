@@ -2,6 +2,9 @@ package com.github.aesteve.nubes.orm.mongo.handlers.impl;
 
 import io.vertx.ext.web.RoutingContext;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.github.aesteve.nubes.orm.annotations.RetrieveByQuery;
 import com.github.aesteve.nubes.orm.mongo.services.MongoService;
 import com.github.aesteve.nubes.orm.queries.FindBy;
@@ -21,15 +24,16 @@ public class QueryListProcessor extends NoopAfterAllProcessor implements Annotat
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void postHandle(RoutingContext context) {
-		Payload<FindBy<?>> payload = context.get(Payload.DATA_ATTR);
+		Payload<FindBy> payload = context.get(Payload.DATA_ATTR);
 		PaginationContext pageContext = context.get(PaginationContext.DATA_ATTR);
-		mongo.listAndCount(payload.get(), pageContext.firstItemInPage(), pageContext.lastItemInPage(), res -> {
+		FindBy findBy = payload.get();
+		mongo.listAndCount(findBy, pageContext.firstItemInPage(), pageContext.lastItemInPage(), res -> {
 			if (res.failed()) {
 				context.put(Payload.DATA_ATTR, null);
 				context.fail(res.cause());
 			} else {
-				Payload newPayload = new Payload<>();
-				newPayload.set(res.result().list);
+				Payload<List<Object>> newPayload = new Payload<>();
+				newPayload.set(transformAll(res.result().list, findBy));
 				pageContext.setNbItems(res.result().count);
 				context.put(Payload.DATA_ATTR, newPayload);
 				context.next();
@@ -47,4 +51,12 @@ public class QueryListProcessor extends NoopAfterAllProcessor implements Annotat
 		return RetrieveByQuery.class;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private static List<Object> transformAll(List original, FindBy findBy) {
+		List<Object> objects = new ArrayList<>(original.size());
+		original.forEach(object -> {
+			objects.add(findBy.transform(object));
+		});
+		return objects;
+	}
 }

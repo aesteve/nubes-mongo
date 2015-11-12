@@ -4,6 +4,7 @@ import io.vertx.ext.web.RoutingContext;
 
 import com.github.aesteve.nubes.orm.annotations.Create;
 import com.github.aesteve.nubes.orm.mongo.services.MongoService;
+import com.github.aesteve.nubes.orm.queries.FindBy;
 import com.github.aesteve.vertx.nubes.handlers.AnnotationProcessor;
 import com.github.aesteve.vertx.nubes.handlers.impl.NoopAfterAllProcessor;
 import com.github.aesteve.vertx.nubes.marshallers.Payload;
@@ -19,13 +20,15 @@ public class SavesAndReturnProcessor extends NoopAfterAllProcessor implements An
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void postHandle(RoutingContext context) {
-		Payload payload = context.get(Payload.DATA_ATTR);
-		mongo.create(payload.get(), res -> {
+		Payload<FindBy> payload = context.get(Payload.DATA_ATTR);
+		FindBy findBy = payload.get();
+		mongo.create(findBy, res -> {
 			if (res.failed()) {
 				context.fail(res.cause());
 			} else {
-				payload.set(res.result());
-				context.put(Payload.DATA_ATTR, payload);
+				Payload<Object> newPayload = new Payload<>();
+				newPayload.set(findBy.transform(res.result()));
+				context.put(Payload.DATA_ATTR, newPayload);
 				context.next();
 			}
 		});

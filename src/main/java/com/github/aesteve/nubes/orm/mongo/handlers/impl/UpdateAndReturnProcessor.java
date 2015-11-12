@@ -27,7 +27,7 @@ public class UpdateAndReturnProcessor extends NoopAfterAllProcessor implements A
 				context.fail(res.cause());
 			} else {
 				Payload newPayload = new Payload<>();
-				newPayload.set(res.result());
+				newPayload.set(updateBy.transform(res.result()));
 				context.put(Payload.DATA_ATTR, payload);
 				context.next();
 			}
