@@ -39,9 +39,4 @@ public class GetByIdProcessor extends NoopAfterAllProcessor implements Annotatio
 		context.next();
 	}
 
-	@Override
-	public Class<? extends RetrieveById> getAnnotationType() {
-		return RetrieveById.class;
-	}
-
 }

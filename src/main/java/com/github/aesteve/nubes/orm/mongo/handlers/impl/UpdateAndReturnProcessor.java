@@ -39,9 +39,4 @@ public class UpdateAndReturnProcessor extends NoopAfterAllProcessor implements A
 		context.next();
 	}
 
-	@Override
-	public Class<? extends Update> getAnnotationType() {
-		return Update.class;
-	}
-
 }

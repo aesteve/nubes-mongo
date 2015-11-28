@@ -35,9 +35,4 @@ public class RemoveByIdProcessor extends NoopAfterAllProcessor implements Annota
 		context.next();
 	}
 
-	@Override
-	public Class<? extends RemoveById> getAnnotationType() {
-		return RemoveById.class;
-	}
-
 }
