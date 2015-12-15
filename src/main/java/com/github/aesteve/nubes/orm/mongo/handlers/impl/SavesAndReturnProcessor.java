@@ -50,8 +50,4 @@ public class SavesAndReturnProcessor extends NoopAfterAllProcessor implements An
 		context.next();
 	}
 
-	@Override
-	public Class<? extends Create> getAnnotationType() {
-		return Create.class;
-	}
 }

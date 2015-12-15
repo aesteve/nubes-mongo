@@ -46,11 +46,6 @@ public class QueryListProcessor extends NoopAfterAllProcessor implements Annotat
 		context.next();
 	}
 
-	@Override
-	public Class<? extends RetrieveByQuery> getAnnotationType() {
-		return RetrieveByQuery.class;
-	}
-
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private static List<Object> transformAll(List original, FindBy findBy) {
 		List<Object> objects = new ArrayList<>(original.size());
