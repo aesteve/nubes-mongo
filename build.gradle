@@ -5,11 +5,8 @@ plugins {
 	id 'maven'
 }
 
-def VERTX_VERSION = "3.1.0"
-def NUBES_VERSION = "0.1-SNAPSHOT"
-
 group='com.github.aesteve'
-version=NUBES_VERSION
+version=nubesVersion
 
 
 repositories {
@@ -20,10 +17,10 @@ repositories {
 
 dependencies {
 
-	compile "com.github.aesteve:nubes-orm:${NUBES_VERSION}"
-	compile "io.vertx:vertx-mongo-client:${VERTX_VERSION}"
+	compile "com.github.aesteve:nubes-orm:${nubesVersion}"
+	compile "io.vertx:vertx-mongo-client:${vertxVersion}"
 
-	testCompile "io.vertx:vertx-unit:${VERTX_VERSION}"
+	testCompile "io.vertx:vertx-unit:${vertxVersion}"
 	testCompile 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:1.50.0'
 	testCompile 'junit:junit:4.12'
 }
